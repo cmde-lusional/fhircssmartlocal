@@ -9,6 +9,12 @@
 
     <ItemGroup>
       <PackageReference Include="Hl7.Fhir.R4" Version="4.3.0" />
+      <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
+      <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.9" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.9" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.9" />
     </ItemGroup>
 
 </Project>
