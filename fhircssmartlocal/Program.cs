@@ -10,6 +10,8 @@ using Hl7.Fhir.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting;
+using Task = System.Threading.Tasks.Task;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -19,16 +21,45 @@ builder.WebHost.UseUrls("http://127.0.0.1:0");
 
 app.MapGet("/", () => "Hello World!");
 
+/*startWebserverInBackground();*/
+
 app.Start();
 
 //print the urls that have been picked by the UseUrls function above 
 Console.WriteLine("URLs:");
 
+int port = 0;
+
 int urlCounter = 0;
 foreach (var weburl in app.Urls)
 {
+    if (string.IsNullOrEmpty(weburl))
+    {
+        continue;
+    }
+
+    if (weburl.Length < 18)
+    {
+        continue;
+    }
+
     Console.WriteLine($"url {urlCounter, 3}: {weburl}");
+
+    if (int.TryParse(weburl.Substring(17), out port) && port != 0);
+
+    Console.WriteLine($"Port: {port}");
 }
+
+/*for (int loops = 0; loops > 10; loops++)
+{
+    System.Threading.Thread.Sleep(100000000);
+}
+
+async void startWebserverInBackground()
+{
+    Task.Run(() => app.Run());
+    await Task.Delay(500);
+}*/
 
 // connection dic for fire server
 Dictionary<string, string> _fhirServers = new Dictionary<string, string>()

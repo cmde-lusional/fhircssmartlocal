@@ -70,8 +70,11 @@
               "target": "Package",
               "version": "[3.1.9, )"
             },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[3.1.9, )"
+            },
             "Microsoft.NETCore.App": {
-              "suppressParent": "All",
               "target": "Package",
               "version": "[2.2.8, )"
             },
