@@ -85,10 +85,28 @@ to provide us the url:
 {
 //print the urls that have been picked by the UseUrls function above 
 Console.WriteLine("URLs:");
+
+int port = 0;
+
 int urlCounter = 0;
 foreach (var weburl in app.Urls)
-{
+{   
+    await Task.Delay(100);
+    if (string.IsNullOrEmpty(weburl))
+    {
+        continue;
+    }
+
+    if (weburl.Length < 18)
+    {
+        continue;
+    }
+
     Console.WriteLine($"url {urlCounter, 3}: {weburl}");
+
+    if (int.TryParse(weburl.Substring(17), out port) && port != 0);
+
+    Console.WriteLine($"Port: {port}");
 }
 }
 ```
