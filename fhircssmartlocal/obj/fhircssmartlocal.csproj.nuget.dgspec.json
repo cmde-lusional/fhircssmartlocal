@@ -38,9 +38,17 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "ExtCore.WebApplication": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            },
             "Hl7.Fhir.R4": {
               "target": "Package",
               "version": "[4.3.0, )"
+            },
+            "Microsoft.AspNetCore": {
+              "target": "Package",
+              "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Cors": {
               "target": "Package",
@@ -61,6 +69,15 @@
             "Microsoft.Extensions.Configuration.Json": {
               "target": "Package",
               "version": "[3.1.9, )"
+            },
+            "Microsoft.NETCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.8, )"
+            },
+            "microsoft.aspnetcore.webutilities": {
+              "target": "Package",
+              "version": "[2.2.0, )"
             }
           },
           "imports": [
