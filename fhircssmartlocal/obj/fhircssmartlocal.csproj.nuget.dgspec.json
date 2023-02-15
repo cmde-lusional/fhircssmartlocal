@@ -75,6 +75,7 @@
               "version": "[3.1.9, )"
             },
             "Microsoft.NETCore.App": {
+              "suppressParent": "All",
               "target": "Package",
               "version": "[2.2.8, )"
             },
