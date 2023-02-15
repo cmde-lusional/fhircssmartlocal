@@ -94,3 +94,70 @@ foreach (var weburl in app.Urls)
 ```
 
 The above code shows how to extract the urls. Note that this code needs to be placed after starting the app with app.Start().
+
+The code below is an alternative to get the port number while using the Webhost.Webapplicaton
+
+```
+{
+while (!urlsAvailable && count < 10)
+{
+    //as soon as there is an entry in app.Urls
+    if (app.Urls.Any())
+    {
+        urlsAvailable = true;
+        Console.WriteLine(app.Urls.ToString());
+        
+        int i = 0;
+        foreach (string weburl in app.Urls)
+        {
+            Console.WriteLine(weburl[i]);
+            try
+            {
+                if (string.IsNullOrEmpty(weburl))
+                {
+                    continue;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            try
+            {
+                if (weburl.Length < 18)
+                {
+                    continue;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            try
+            {
+                if (int.TryParse(weburl.Substring(17), out listenPort) && listenPort != 0) ;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            i++;
+
+        }
+        
+    }
+    else
+    {
+        Console.WriteLine("app.Urls is empty, waiting for a few seconds...");
+        Thread.Sleep(2000);
+        count++;
+    }
+}
+}
+ç
