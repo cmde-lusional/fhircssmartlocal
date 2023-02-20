@@ -160,4 +160,60 @@ while (!urlsAvailable && count < 10)
     }
 }
 }
-ç
+```
+
+
+### Deserializing the Access Token json response
+
+During the last step the server response with an access token in json format:
+
+```
+{
+{
+    "access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6Im9wZW5pZCBmaGlyVXNlciBwcm9maWxlIGxhdW5jaC9wYXRpZW50IHBhdGllbnQvKi5yZWFkIiwiaWF0IjoxNjc2ODU5MjcyLCJleHAiOjE2NzY4NjI4NzJ9.6IbTcZtd9TxHNABXNsHlmUGOSldQ9SBexbsUn4dqggE",
+    "token_type":"Bearer",
+    "expires_in":3600,
+    "scope":"openid fhirUser profile launch/patient patient/*.read",
+    "id_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiUHJhY3RpdGlvbmVyL2U0NDNhYzU4LThlY2UtNDM4NS04ZDU1LTc3NWMxYjhmM2EzNyIsImZoaXJVc2VyIjoiUHJhY3RpdGlvbmVyL2U0NDNhYzU4LThlY2UtNDM4NS04ZDU1LTc3NWMxYjhmM2EzNyIsImF1ZCI6ImZoaXJfZGVtb19pZCIsInN1YiI6ImY2M2M1ZTlhMDBkZDQ4NzhiNzM0ZTYwZTBhNjQ2NzdiYzI3YjgxOGQ4YTNmYjk4MTNhZDJmMzUyMzZkYWQyZWEiLCJpc3MiOiJodHRwczovL2xhdW5jaC5zbWFydGhlYWx0aGl0Lm9yZy92L3I0L3NpbS9XeklzSWlJc0ltVTBORE5oWXpVNExUaGxZMlV0TkRNNE5TMDRaRFUxTFRjM05XTXhZamhtTTJFek55SXNJa0ZWVkU4aUxEQXNNQ3d3TENJaUxDSWlMQ0lpTENJaUxDSWlMQ0lpTENJaUxEQXNNVjAvZmhpciIsImlhdCI6MTY3Njg1OTI3MiwiZXhwIjoxNjc2ODYyODcyfQ.kSNDDgiucBmy9-8GPwkofwBFZVC1tNwfzRodz1Vc3TXwHQm_ii4dBewa8qBCOXu2HN_VCrcVzuamjG8T9WYU33SR-WUxn0MU4FvlayFqQDAmv2hqLOpObh1V9mbrt0irGmjsHagfHSu2jxFswhY3HPWsqlG0wDc9dCFJh5G89XCUuVBwLlMEAjl_j7YIgJUSTdW0RBjsWEP2e5sI6AA0O6gqK98Ga7--kP31VORUJRv2RpoIOjc-62HGY_VLoHp9yPFDU188CJ5MVBMtPuF4rOTjctw8qxUYeCIUkIHYb6VWD9coHKrG5dAeBkEppT7Mii9YttTt9q1Az_EE5laisw",
+    "need_patient_banner":true,
+    "smart_style_url":"https://launch.smarthealthit.org/smart-style.json",
+    "patient":"80a75b5a-fd30-4f38-895d-d8098fe7206e"
+}
+}
+```
+
+This needs to be parsed by our program. You can find the deserilization process under SmartResponse.cs
+
+By using the "System.Text.Json.Serialization" package we can define "get" and "set" methods inside the class as follows:
+
+```
+{
+    //class to deserialize smart auth responses
+    public class SmartResponse
+    {
+        [JsonPropertyName("need_patient_banner")]
+        public bool needPatientBanner { get; set; }
+
+        ...
+
+}
+```
+
+ERROR: fhirClient.OnBeforeRequest doesn't exist. 
+
+Because we want to add the Bearer token to the FhirClient request, we need to add a new HttpClient with an HttpClientHandler and change the "Authorization" attribute of the handler to the value from our smartResponse.accesstoken to provide the access token to the FhirServer. In the end we can read the patient.
+All this is done in our "doSomethingWithToken" function.
+
+Solution:
+
+```
+{
+    using var httpClientHandler = new HttpClientHandler();
+    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+
+    HttpClient httpClient = new HttpClient(httpClientHandler);
+    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", smartResponse.accessToken);
+
+    FhirClient fhirClient = new FhirClient(fhirServerUrl, httpClient, settings);
+}
+```
